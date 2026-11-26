@@ -251,8 +251,8 @@ body.busy #controls,body.busy #keyhint{display:none}
 .home-list .item{flex:none;width:96px}
 .home-sel{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
 
-#title{position:fixed;inset:0;z-index:30;display:flex;align-items:flex-end;justify-content:center;padding-block:16px max(16px,env(safe-area-inset-bottom,0px));padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));overflow:auto;background:linear-gradient(transparent 35%,rgba(255,251,239,.55))}
-.title-card{width:min(600px,100%);background:var(--paper);border:5px solid var(--wood);border-radius:30px;box-shadow:0 8px 0 var(--wood-d);padding:18px;display:flex;flex-direction:column;gap:10px;text-align:center}
+#title{position:fixed;inset:0;z-index:30;display:flex;align-items:flex-start;justify-content:center;padding-block:16px max(16px,env(safe-area-inset-bottom,0px));padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));overflow:auto;background:linear-gradient(transparent 35%,rgba(255,251,239,.55))}
+.title-card{margin-top:auto;flex:none;width:min(600px,100%);background:var(--paper);border:5px solid var(--wood);border-radius:30px;box-shadow:0 8px 0 var(--wood-d);padding:18px;display:flex;flex-direction:column;gap:10px;text-align:center}
 .title-card h1{margin:0;font-family:var(--display);font-weight:400;font-size:clamp(36px,8vw,54px);color:var(--leaf-d);letter-spacing:.04em;text-shadow:3px 3px 0 var(--sun)}
 .title-card .sub{margin:-6px 0 0;color:var(--ink-soft);font-size:15px}
 .pick-lbl{font-size:15px;margin:0}
@@ -270,6 +270,17 @@ body.busy #controls,body.busy #keyhint{display:none}
 .acc-form{background:#fff8e6;border:3px dashed var(--wood);border-radius:16px;padding:10px;display:flex;flex-direction:column;gap:8px;font-weight:900}
 .acc-form input{font:inherit;font-size:20px;text-align:center;padding:6px 10px;border:3px solid var(--wood);border-radius:12px;width:min(260px,100%);align-self:center}
 #accEditBtn{align-self:center;margin-top:-4px}
+#title{-webkit-overflow-scrolling:touch;overscroll-behavior:contain;touch-action:pan-y}
+@media (max-height:720px){
+  .title-card{padding:10px 12px;gap:6px;border-width:4px;border-radius:22px}
+  .title-card h1{font-size:30px}.title-card .sub,.title-card .howto{display:none}
+  .pick-lbl{font-size:13px}.pick button{padding:3px 9px;font-size:13px}.pick button .pe{font-size:20px}
+  .acc>button{min-width:76px}.acc>button .an{font-size:13px}
+}
+.hbtn.quit{background:#fff}
+#bye .btn-row{justify-content:center}
+#bye{position:fixed;inset:0;z-index:60;display:flex;align-items:center;justify-content:center;padding:16px;background:rgba(255,251,239,.96)}
+#bye .title-card{margin-top:0}
 .howto{margin:0;font-size:12px;color:var(--ink-soft);line-height:1.6}
 .confetti{position:fixed;top:-20px;width:10px;height:14px;z-index:45;pointer-events:none;animation:fall 1.6s ease-in forwards}
 @keyframes fall{to{transform:translateY(105vh) rotate(720deg)}}
@@ -328,7 +339,7 @@ body.busy #controls,body.busy #keyhint{display:none}
   <button id="qtrack" type="button">📜 クエスト</button></div>
   <div class="hud-r">
     <canvas id="mini" width="240" height="240" aria-label="ちず（タップで おおきく）"></canvas>
-    <div class="hud-btns"><button class="hbtn" id="bMission" type="button">ミッション<span class="badge" id="mBadge"></span></button><button class="hbtn" id="bMenu" type="button">メニュー</button></div>
+    <div class="hud-btns"><button class="hbtn" id="bMission" type="button">ミッション<span class="badge" id="mBadge"></span></button><button class="hbtn" id="bMenu" type="button">メニュー</button><button class="hbtn quit" id="bQuit" type="button">🚪おわる</button></div>
   </div>
 </div>
 <div id="fade"></div>
@@ -372,77 +383,77 @@ body.busy #controls,body.busy #keyhint{display:none}
 <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/ShaderPass.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/UnrealBloomPass.js"></script>
 <!-- ?v= forces the browser to load fresh files after each change (bump it when files change) -->
-<script src="data.js?v=20261126a"></script>
-<script src="kanji.js?v=20261126a"></script>
-<script src="quiz.js?v=20261126a"></script>
-<script src="world.js?v=20261126a"></script>
-<script src="town.js?v=20261126a"></script>
-<script src="fx.js?v=20261126a"></script>
-<script src="ui.js?v=20261126a"></script>
-<script src="ui2.js?v=20261126a"></script>
-<script src="study.js?v=20261126a"></script>
-<script src="interior.js?v=20261126a"></script>
-<script src="quest.js?v=20261126a"></script>
-<script src="request.js?v=20261126a"></script>
-<script src="record.js?v=20261126a"></script>
+<script src="data.js?v=20261126d"></script>
+<script src="kanji.js?v=20261126d"></script>
+<script src="quiz.js?v=20261126d"></script>
+<script src="world.js?v=20261126d"></script>
+<script src="town.js?v=20261126d"></script>
+<script src="fx.js?v=20261126d"></script>
+<script src="ui.js?v=20261126d"></script>
+<script src="ui2.js?v=20261126d"></script>
+<script src="study.js?v=20261126d"></script>
+<script src="interior.js?v=20261126d"></script>
+<script src="quest.js?v=20261126d"></script>
+<script src="request.js?v=20261126d"></script>
+<script src="record.js?v=20261126d"></script>
 <!-- もんだいデータ（がくねん・きょうかごと。 もんだいを たすときは ここの ファイルを へんしゅう） -->
-<script src="qdata/g1_math.js?v=20261126a"></script>
-<script src="qdata/g1_kokugo.js?v=20261126a"></script>
-<script src="qdata/g2_math.js?v=20261126a"></script>
-<script src="qdata/g2_kokugo.js?v=20261126a"></script>
-<script src="qdata/g3_math.js?v=20261126a"></script>
-<script src="qdata/g3_kokugo.js?v=20261126a"></script>
-<script src="qdata/g1_rika.js?v=20261126a"></script>
-<script src="qdata/g1_eigo.js?v=20261126a"></script>
-<script src="qdata/g1_shakai.js?v=20261126a"></script>
-<script src="qdata/g1_art.js?v=20261126a"></script>
-<script src="qdata/g2_rika.js?v=20261126a"></script>
-<script src="qdata/g2_eigo.js?v=20261126a"></script>
-<script src="qdata/g2_shakai.js?v=20261126a"></script>
-<script src="qdata/g2_art.js?v=20261126a"></script>
-<script src="qdata/g3_rika.js?v=20261126a"></script>
-<script src="qdata/g3_eigo.js?v=20261126a"></script>
-<script src="qdata/g3_shakai.js?v=20261126a"></script>
-<script src="qdata/g3_art.js?v=20261126a"></script>
-<script src="qdata/g4_math.js?v=20261126a"></script>
-<script src="qdata/g4_kokugo.js?v=20261126a"></script>
-<script src="qdata/g4_rika.js?v=20261126a"></script>
-<script src="qdata/g4_eigo.js?v=20261126a"></script>
-<script src="qdata/g4_shakai.js?v=20261126a"></script>
-<script src="qdata/g4_art.js?v=20261126a"></script>
-<script src="qdata/g5_math.js?v=20261126a"></script>
-<script src="qdata/g5_kokugo.js?v=20261126a"></script>
-<script src="qdata/g5_rika.js?v=20261126a"></script>
-<script src="qdata/g5_eigo.js?v=20261126a"></script>
-<script src="qdata/g5_shakai.js?v=20261126a"></script>
-<script src="qdata/g5_art.js?v=20261126a"></script>
-<script src="qdata/g6_math.js?v=20261126a"></script>
-<script src="qdata/g6_kokugo.js?v=20261126a"></script>
-<script src="qdata/g6_rika.js?v=20261126a"></script>
-<script src="qdata/g6_eigo.js?v=20261126a"></script>
-<script src="qdata/g6_shakai.js?v=20261126a"></script>
-<script src="qdata/g6_art.js?v=20261126a"></script>
-<script src="qdata/g1_plus.js?v=20261126a"></script>
-<script src="qdata/g2_plus.js?v=20261126a"></script>
-<script src="qdata/g3_plus.js?v=20261126a"></script>
-<script src="qdata/g4_plus.js?v=20261126a"></script>
-<script src="qdata/g5_plus.js?v=20261126a"></script>
-<script src="qdata/g6_plus.js?v=20261126a"></script>
-<script src="textbook.js?v=20261126a"></script>
-<script src="tdata/t1.js?v=20261126a"></script>
-<script src="tdata/t2.js?v=20261126a"></script>
-<script src="tdata/t3.js?v=20261126a"></script>
-<script src="tdata/t4.js?v=20261126a"></script>
-<script src="tdata/t5.js?v=20261126a"></script>
-<script src="tdata/t6.js?v=20261126a"></script>
-<script src="tdata/t1b.js?v=20261126a"></script>
-<script src="tdata/t2b.js?v=20261126a"></script>
-<script src="tdata/t3b.js?v=20261126a"></script>
-<script src="tdata/t4b.js?v=20261126a"></script>
-<script src="tdata/t5b.js?v=20261126a"></script>
-<script src="tdata/t6b.js?v=20261126a"></script>
-<script src="tdata/tc.js?v=20261126a"></script>
-<script src="season.js?v=20261126a"></script>
-<script src="athletic.js?v=20261126a"></script>
-<script src="main.js?v=20261126a"></script>
-<script>console.log('どんぐりむら build 20261126a');</script>
+<script src="qdata/g1_math.js?v=20261126d"></script>
+<script src="qdata/g1_kokugo.js?v=20261126d"></script>
+<script src="qdata/g2_math.js?v=20261126d"></script>
+<script src="qdata/g2_kokugo.js?v=20261126d"></script>
+<script src="qdata/g3_math.js?v=20261126d"></script>
+<script src="qdata/g3_kokugo.js?v=20261126d"></script>
+<script src="qdata/g1_rika.js?v=20261126d"></script>
+<script src="qdata/g1_eigo.js?v=20261126d"></script>
+<script src="qdata/g1_shakai.js?v=20261126d"></script>
+<script src="qdata/g1_art.js?v=20261126d"></script>
+<script src="qdata/g2_rika.js?v=20261126d"></script>
+<script src="qdata/g2_eigo.js?v=20261126d"></script>
+<script src="qdata/g2_shakai.js?v=20261126d"></script>
+<script src="qdata/g2_art.js?v=20261126d"></script>
+<script src="qdata/g3_rika.js?v=20261126d"></script>
+<script src="qdata/g3_eigo.js?v=20261126d"></script>
+<script src="qdata/g3_shakai.js?v=20261126d"></script>
+<script src="qdata/g3_art.js?v=20261126d"></script>
+<script src="qdata/g4_math.js?v=20261126d"></script>
+<script src="qdata/g4_kokugo.js?v=20261126d"></script>
+<script src="qdata/g4_rika.js?v=20261126d"></script>
+<script src="qdata/g4_eigo.js?v=20261126d"></script>
+<script src="qdata/g4_shakai.js?v=20261126d"></script>
+<script src="qdata/g4_art.js?v=20261126d"></script>
+<script src="qdata/g5_math.js?v=20261126d"></script>
+<script src="qdata/g5_kokugo.js?v=20261126d"></script>
+<script src="qdata/g5_rika.js?v=20261126d"></script>
+<script src="qdata/g5_eigo.js?v=20261126d"></script>
+<script src="qdata/g5_shakai.js?v=20261126d"></script>
+<script src="qdata/g5_art.js?v=20261126d"></script>
+<script src="qdata/g6_math.js?v=20261126d"></script>
+<script src="qdata/g6_kokugo.js?v=20261126d"></script>
+<script src="qdata/g6_rika.js?v=20261126d"></script>
+<script src="qdata/g6_eigo.js?v=20261126d"></script>
+<script src="qdata/g6_shakai.js?v=20261126d"></script>
+<script src="qdata/g6_art.js?v=20261126d"></script>
+<script src="qdata/g1_plus.js?v=20261126d"></script>
+<script src="qdata/g2_plus.js?v=20261126d"></script>
+<script src="qdata/g3_plus.js?v=20261126d"></script>
+<script src="qdata/g4_plus.js?v=20261126d"></script>
+<script src="qdata/g5_plus.js?v=20261126d"></script>
+<script src="qdata/g6_plus.js?v=20261126d"></script>
+<script src="textbook.js?v=20261126d"></script>
+<script src="tdata/t1.js?v=20261126d"></script>
+<script src="tdata/t2.js?v=20261126d"></script>
+<script src="tdata/t3.js?v=20261126d"></script>
+<script src="tdata/t4.js?v=20261126d"></script>
+<script src="tdata/t5.js?v=20261126d"></script>
+<script src="tdata/t6.js?v=20261126d"></script>
+<script src="tdata/t1b.js?v=20261126d"></script>
+<script src="tdata/t2b.js?v=20261126d"></script>
+<script src="tdata/t3b.js?v=20261126d"></script>
+<script src="tdata/t4b.js?v=20261126d"></script>
+<script src="tdata/t5b.js?v=20261126d"></script>
+<script src="tdata/t6b.js?v=20261126d"></script>
+<script src="tdata/tc.js?v=20261126d"></script>
+<script src="season.js?v=20261126d"></script>
+<script src="athletic.js?v=20261126d"></script>
+<script src="main.js?v=20261126d"></script>
+<script>console.log('どんぐりむら build 20261126d');</script>
