@@ -1,13 +1,23 @@
 'use strict';
 /* ===== state ===== */
-const SAVE_KEY='donguri3d-v2';
+/* accounts: several players on one device. ACC_KEY holds {cur,list:[{id,name}]}; each account has its own save.
+   The first account 'a1' keeps the old key 'donguri3d-v2', so an existing save becomes プレイヤー1. */
+const ACC_KEY='donguri3d-accounts';
+const accKey=id=>id==='a1'?'donguri3d-v2':'donguri3d-v2:'+id;
+let NO_SAVE=false; /* set right before a reload that switches/deletes an account so nothing writes the old save back */
+const ACC=(()=>{let A=null;try{A=JSON.parse(localStorage.getItem(ACC_KEY));}catch(e){}
+  if(!A||!Array.isArray(A.list)||!A.list.length)A={cur:'a1',list:[{id:'a1',name:'プレイヤー1'}]};
+  if(!A.list.some(a=>a.id===A.cur))A.cur=A.list[0].id;return A;})();
+function accSave(){try{localStorage.setItem(ACC_KEY,JSON.stringify(ACC));}catch(e){}}
+accSave();
+const SAVE_KEY=accKey(ACC.cur);
 function fresh(){return {grade:1,look:{animal:'usagi',shirt:'pink',hat:'ribbon',acc:'none'},own:{hat:['none','ribbon'],shirt:['pink','blue','yellow'],acc:['none'],furn:{chair:1,table:1,plant:1,bed:1},wall:['w0'],floor:['f0']},
   room:{items:[{id:'bed',x:1,z:1,r:0},{id:'table',x:4,z:4,r:0},{id:'chair',x:4,z:5,r:2},{id:'plant',x:0,z:6,r:0}],wall:'w0',floor:'f0'},yen:100,xp:0,level:1,
   st:{correct:0,math:0,kokugo:0,rika:0,eigo:0,shakai:0,art:0,topic:{},streak:0,best:0,fish:{},bugs:{},shells:0,shards:[],ath:0,athBest:0,speedBest:0,ferris:0,gates:[0,0,0],ruinsChest:0,islandChest:0,chestDay:{},mdays:0,met:{}},
   hearts:{},gifts:{},ach:{},missions:null,q:{},track:null,tod:'day',todV:1,fav:[],favMode:'more',season:'real',sound:true,quality:matchMedia('(pointer:coarse)').matches?'low':'high',pos:[0,15],rot:Math.PI,intro:false};}
 let S=fresh(),hadSave=false;
 try{const raw=localStorage.getItem(SAVE_KEY);if(raw){const L=JSON.parse(raw);const f=fresh();S=Object.assign(f,L);S.st=Object.assign(f.st,L.st||{});S.own=Object.assign(fresh().own,L.own||{});S.look=Object.assign(fresh().look,L.look||{});S.room=L.room||f.room;if(!L.todV){S.tod='day';S.todV=1;}if(!S.gradeTop&&S.intro)S.gradeTop=S.grade;hadSave=true;}}catch(e){}
-function save(){try{if(P){S.pos=[+P.pos.x.toFixed(2),+P.pos.z.toFixed(2)];S.rot=P.rot;}localStorage.setItem(SAVE_KEY,JSON.stringify(S));}catch(e){}}
+function save(){if(NO_SAVE)return;try{if(P){S.pos=[+P.pos.x.toFixed(2),+P.pos.z.toFixed(2)];S.rot=P.rot;}localStorage.setItem(SAVE_KEY,JSON.stringify(S));}catch(e){}}
 let mode='title',camMode='title';
 const cam={yaw:Math.PI,pitch:CAM_PITCH,dist:CAM_DIST,tgt:new V3()};
 function applyQuality(){const low=S.quality==='low';renderer.setPixelRatio(Math.min(devicePixelRatio||1,low?1.2:2));const n=low?1024:2048;sun.shadow.mapSize.set(n,n);if(sun.shadow.map){sun.shadow.map.dispose();sun.shadow.map=null;}resize();}
@@ -135,7 +145,8 @@ $('#homeExit').onclick=exitHome;
 /* ===== input ===== */
 const keys={};const joy={x:0,y:0,id:null};let jumpReq=false;
 const KM={ArrowUp:'u',ArrowDown:'d',ArrowLeft:'l',ArrowRight:'r',w:'u',s:'d',a:'l',d:'r',W:'u',S:'d',A:'l',D:'r'};
-addEventListener('keydown',e=>{if(KM[e.key]){keys[KM[e.key]]=true;if(mode==='world')e.preventDefault();}if(e.key==='Shift')keys.run=true;
+addEventListener('keydown',e=>{if(e.target&&e.target.tagName==='INPUT')return; /* typing a name on the title */
+  if(KM[e.key]){keys[KM[e.key]]=true;if(mode==='world')e.preventDefault();}if(e.key==='Shift')keys.run=true;
   if(e.key==='Escape'){if(!modal.hidden)closeModal();else if(dressOpen)closeDress();}
   const ae=document.activeElement;if(ae&&ae.tagName==='BUTTON')return;
   if(e.key===' '){e.preventDefault();if(dlgAdv)dlgAdv();else jumpReq=true;}
@@ -311,7 +322,37 @@ function loop(now){const dt=Math.min(.05,(now-last)/1000);last=now;time+=dt;
 
 /* ===== title & boot ===== */
 function markSel(){document.querySelectorAll('#pickGrade button').forEach(b=>b.classList.toggle('sel',+b.dataset.g===S.grade));document.querySelectorAll('#pickAnimal button').forEach(b=>b.classList.toggle('sel',b.dataset.a===S.look.animal));}
-function setupTitle(){const pa=$('#pickAnimal');Object.entries(ANIMALS).forEach(([id,a])=>{const b=document.createElement('button');b.type='button';b.dataset.a=id;b.innerHTML=`<span class="pe">${a.em}</span>${a.n}`;b.onclick=()=>{S.look.animal=id;rebuildPlayer();markSel();};pa.appendChild(b);});
+/* ===== accounts on the title: pick who plays, add / rename / delete ===== */
+function accInfo(id){try{const L=JSON.parse(localStorage.getItem(accKey(id))||'null');if(L&&L.look)return {em:(ANIMALS[L.look.animal]||{}).em||'🙂',lv:L.level||1,g:L.grade||1};}catch(e){}return null;}
+function accSwitch(id){if(mode!=='title')save();NO_SAVE=true;ACC.cur=id;accSave();if(location.hash)history.replaceState(null,'',location.pathname+location.search);location.reload();}
+let accEdit=false,accForm=null; /* accForm: {kind:'new'|'rename'|'del', id} */
+const el=(tag,cls,txt)=>{const e=document.createElement(tag);if(cls)e.className=cls;if(txt!=null)e.textContent=txt;return e;};
+function renderAccounts(){const box=$('#pickAcc'),fm=$('#accForm');box.innerHTML='';
+  ACC.list.forEach(a=>{const cur=a.id===ACC.cur,inf=cur?(hadSave?{em:ANIMALS[S.look.animal].em,lv:S.level,g:S.grade}:null):accInfo(a.id);
+    const w=el('div','acc');const b=el('button',cur?'sel':'');b.type='button';
+    b.append(el('span','pe',inf?inf.em:'🌱'),el('span','an',a.name),el('small','',inf?`${inf.g}[年|ねん][生|せい]・レベル${inf.lv}`:'[新|あたら]しい'));
+    b.onclick=()=>{if(accEdit)return;if(!cur)accSwitch(a.id);};w.append(b);
+    if(accEdit){const t=el('div','acc-ed');const r=el('button','','✏️');r.type='button';r.title='なまえを [変|か]える';r.onclick=()=>{accForm={kind:'rename',id:a.id};renderAccounts();};t.append(r);
+      if(ACC.list.length>1){const d=el('button','','🗑️');d.type='button';d.title='けす';d.onclick=()=>{accForm={kind:'del',id:a.id};renderAccounts();};t.append(d);}w.append(t);}
+    box.append(w);});
+  if(!accEdit&&ACC.list.length<8){const w=el('div','acc');const b=el('button','add');b.type='button';b.append(el('span','pe','➕'),el('span','an','[新|あたら]しく つくる'));b.onclick=()=>{accForm={kind:'new'};renderAccounts();};w.append(b);box.append(w);}
+  $('#accEditBtn').textContent=accEdit?'おわる':'なまえを [変|か]える・けす';
+  fm.innerHTML='';fm.hidden=!accForm;if(!accForm)return;
+  const close=()=>{accForm=null;renderAccounts();};const A=accForm.id&&ACC.list.find(x=>x.id===accForm.id);
+  if(accForm.kind==='del'){fm.append(el('div','',`「${A.name}」を けす？ [遊|あそ]んだ [記|き][録|ろく]も [全|ぜん][部|ぶ] [消|き]えて、もとに もどせないよ。`));
+    const row=el('div','btn-row');const no=el('button','big-btn calm','やめる');no.type='button';no.onclick=close;const yes=el('button','big-btn','けす');yes.type='button';
+    yes.onclick=()=>{try{localStorage.removeItem(accKey(A.id));}catch(e){}ACC.list=ACC.list.filter(x=>x!==A);accSave();
+      if(A.id===ACC.cur)accSwitch(ACC.list[0].id);else{accForm=null;if(ACC.list.length<2)accEdit=false;renderAccounts();}};
+    row.append(no,yes);fm.append(row);return;}
+  fm.append(el('div','',accForm.kind==='new'?'なまえを [入|い]れてね':'[新|あたら]しい なまえ'));
+  const inp=el('input');inp.id='accName';inp.maxLength=10;inp.autocomplete='off';inp.value=A?A.name:'';fm.append(inp);
+  const row=el('div','btn-row');const no=el('button','big-btn calm','やめる');no.type='button';no.onclick=close;const ok=el('button','big-btn',accForm.kind==='new'?'つくる':'[変|か]える');ok.type='button';
+  const go=()=>{const nm=inp.value.trim().slice(0,10);if(!nm){inp.focus();return;}
+    if(accForm.kind==='new'){const id='p'+Date.now().toString(36);ACC.list.push({id,name:nm});accSave();accSwitch(id);}
+    else{A.name=nm;accSave();close();}};
+  ok.onclick=go;inp.onkeydown=e=>{if(e.key==='Enter'&&!e.isComposing)go();};row.append(no,ok);fm.append(row);later(()=>inp.focus(),30);}
+function setupAccounts(){$('#accEditBtn').onclick=()=>{accEdit=!accEdit;accForm=null;renderAccounts();};renderAccounts();}
+function setupTitle(){setupAccounts();const pa=$('#pickAnimal');Object.entries(ANIMALS).forEach(([id,a])=>{const b=document.createElement('button');b.type='button';b.dataset.a=id;b.innerHTML=`<span class="pe">${a.em}</span>${a.n}`;b.onclick=()=>{S.look.animal=id;rebuildPlayer();markSel();renderAccounts();};pa.appendChild(b);});
   document.querySelectorAll('#pickGrade button').forEach(b=>b.onclick=()=>{if(S.grade!==+b.dataset.g)adaptReset();S.grade=+b.dataset.g;markSel();kjRefresh();});markSel();if(hadSave)$('#startBtn').textContent='[続|つづ]きから [遊|あそ]ぶ！';$('#startBtn').onclick=startGame;}
 async function startGame(){initAudio();$('#startBtn').blur();$('#title').hidden=true;mode='world';camMode='follow';cam.yaw=P.rot+Math.PI;cam.pitch=CAM_PITCH;$('#hud').hidden=false;$('#controls').hidden=false;$('#keyhint').hidden=false;setBusy(0);ensureMissions();updateHUD();save();if(S.sound)bgmStart();
   if(!S.intro){S.intro=true;save();const hoo=FR('hoo');await talk(hoo,['ホッホー、 ようこそ どんぐりむらへ！ わしは [学|がっ][校|こう]の ホー[先|せん][生|せい] じゃ。','[村|むら]の [友|とも]だちに [話|はな]しかけると、 クイズや ゲームで [遊|あそ]べるぞ。','[問|もん][題|だい]に [答|こた]えると どんぐりと [経|けい][験|けん][値|ち]が もらえる。 まちがえても だいじょうぶ、 ヒントが でるからのう。','どんぐりで [家|か][具|ぐ]や ふくと [交|こう]かん して、 おうちを すてきに しよう。 レベルが [上|あ]がると [新|あたら]しい [場|ば][所|しょ]にも いけるぞ！','たてものには [入|はい]る ことも できるぞ。 [中|なか]で [困|こま]っている [人|ひと]の 「クエスト」を [手|て][伝|つだ]って あげてごらん。','まずは [商|しょう][店|てん][街|がい]の [家|か][具|ぐ]やで [家|か][具|ぐ]を かって、 おうちを かざって みよう！ ピンクの やじるしに ついていけば だいじょうぶ。']);startQuest('home1');}updateTracker();

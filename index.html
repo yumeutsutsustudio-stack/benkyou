@@ -260,6 +260,16 @@ body.busy #controls,body.busy #keyhint{display:none}
 .pick button{background:#fff;border:3px solid var(--wood);border-radius:14px;padding:5px 12px;font-size:15px;font-weight:900;box-shadow:0 3px 0 var(--wood-d);display:flex;flex-direction:column;align-items:center}
 .pick button .pe{font-size:28px}
 .pick button.sel{background:var(--sun);border-color:var(--wood-d);outline:3px solid var(--berry);outline-offset:1px}
+.acc{display:flex;flex-direction:column;align-items:center;gap:3px}
+.acc>button{min-width:92px;max-width:150px}
+.acc>button .an{font-size:15px;word-break:break-all}
+.acc>button small{font-size:11px;color:var(--ink-soft);font-weight:700}
+.acc>button.add{border-style:dashed}
+.acc-ed{display:flex;gap:4px}
+.acc-ed button{background:#fff;border:2px solid var(--wood);border-radius:10px;padding:2px 8px;font-size:15px}
+.acc-form{background:#fff8e6;border:3px dashed var(--wood);border-radius:16px;padding:10px;display:flex;flex-direction:column;gap:8px;font-weight:900}
+.acc-form input{font:inherit;font-size:20px;text-align:center;padding:6px 10px;border:3px solid var(--wood);border-radius:12px;width:min(260px,100%);align-self:center}
+#accEditBtn{align-self:center;margin-top:-4px}
 .howto{margin:0;font-size:12px;color:var(--ink-soft);line-height:1.6}
 .confetti{position:fixed;top:-20px;width:10px;height:14px;z-index:45;pointer-events:none;animation:fall 1.6s ease-in forwards}
 @keyframes fall{to{transform:translateY(105vh) rotate(720deg)}}
@@ -341,6 +351,10 @@ body.busy #controls,body.busy #keyhint{display:none}
   <div class="title-card">
     <h1>どんぐりむら</h1>
     <p class="sub">[遊|あそ]んで [学|まな]ぶ [動|どう][物|ぶつ]の [村|むら]</p>
+    <p class="pick-lbl">だれが [遊|あそ]ぶ？</p>
+    <div class="pick" id="pickAcc"></div>
+    <div class="acc-form" id="accForm" hidden></div>
+    <button class="small-link" id="accEditBtn" type="button">なまえを [変|か]える・けす</button>
     <p class="pick-lbl">なんねんせい？</p>
     <div class="pick" id="pickGrade"><button type="button" data-g="1">1[年|ねん][生|せい]</button><button type="button" data-g="2">2[年|ねん][生|せい]</button><button type="button" data-g="3">3[年|ねん][生|せい]</button><button type="button" data-g="4">4[年|ねん][生|せい]</button><button type="button" data-g="5">5[年|ねん][生|せい]</button><button type="button" data-g="6">6[年|ねん][生|せい]</button></div>
     <p class="pick-lbl">どの [動|どう][物|ぶつ]に する？</p>
@@ -358,77 +372,77 @@ body.busy #controls,body.busy #keyhint{display:none}
 <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/ShaderPass.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/UnrealBloomPass.js"></script>
 <!-- ?v= forces the browser to load fresh files after each change (bump it when files change) -->
-<script src="data.js?v=20261123i"></script>
-<script src="kanji.js?v=20261123i"></script>
-<script src="quiz.js?v=20261123i"></script>
-<script src="world.js?v=20261123i"></script>
-<script src="town.js?v=20261123i"></script>
-<script src="fx.js?v=20261123i"></script>
-<script src="ui.js?v=20261123i"></script>
-<script src="ui2.js?v=20261123i"></script>
-<script src="study.js?v=20261123i"></script>
-<script src="interior.js?v=20261123i"></script>
-<script src="quest.js?v=20261123i"></script>
-<script src="request.js?v=20261123i"></script>
-<script src="record.js?v=20261123i"></script>
+<script src="data.js?v=20261126a"></script>
+<script src="kanji.js?v=20261126a"></script>
+<script src="quiz.js?v=20261126a"></script>
+<script src="world.js?v=20261126a"></script>
+<script src="town.js?v=20261126a"></script>
+<script src="fx.js?v=20261126a"></script>
+<script src="ui.js?v=20261126a"></script>
+<script src="ui2.js?v=20261126a"></script>
+<script src="study.js?v=20261126a"></script>
+<script src="interior.js?v=20261126a"></script>
+<script src="quest.js?v=20261126a"></script>
+<script src="request.js?v=20261126a"></script>
+<script src="record.js?v=20261126a"></script>
 <!-- もんだいデータ（がくねん・きょうかごと。 もんだいを たすときは ここの ファイルを へんしゅう） -->
-<script src="qdata/g1_math.js?v=20261123i"></script>
-<script src="qdata/g1_kokugo.js?v=20261123i"></script>
-<script src="qdata/g2_math.js?v=20261123i"></script>
-<script src="qdata/g2_kokugo.js?v=20261123i"></script>
-<script src="qdata/g3_math.js?v=20261123i"></script>
-<script src="qdata/g3_kokugo.js?v=20261123i"></script>
-<script src="qdata/g1_rika.js?v=20261123i"></script>
-<script src="qdata/g1_eigo.js?v=20261123i"></script>
-<script src="qdata/g1_shakai.js?v=20261123i"></script>
-<script src="qdata/g1_art.js?v=20261123i"></script>
-<script src="qdata/g2_rika.js?v=20261123i"></script>
-<script src="qdata/g2_eigo.js?v=20261123i"></script>
-<script src="qdata/g2_shakai.js?v=20261123i"></script>
-<script src="qdata/g2_art.js?v=20261123i"></script>
-<script src="qdata/g3_rika.js?v=20261123i"></script>
-<script src="qdata/g3_eigo.js?v=20261123i"></script>
-<script src="qdata/g3_shakai.js?v=20261123i"></script>
-<script src="qdata/g3_art.js?v=20261123i"></script>
-<script src="qdata/g4_math.js?v=20261123i"></script>
-<script src="qdata/g4_kokugo.js?v=20261123i"></script>
-<script src="qdata/g4_rika.js?v=20261123i"></script>
-<script src="qdata/g4_eigo.js?v=20261123i"></script>
-<script src="qdata/g4_shakai.js?v=20261123i"></script>
-<script src="qdata/g4_art.js?v=20261123i"></script>
-<script src="qdata/g5_math.js?v=20261123i"></script>
-<script src="qdata/g5_kokugo.js?v=20261123i"></script>
-<script src="qdata/g5_rika.js?v=20261123i"></script>
-<script src="qdata/g5_eigo.js?v=20261123i"></script>
-<script src="qdata/g5_shakai.js?v=20261123i"></script>
-<script src="qdata/g5_art.js?v=20261123i"></script>
-<script src="qdata/g6_math.js?v=20261123i"></script>
-<script src="qdata/g6_kokugo.js?v=20261123i"></script>
-<script src="qdata/g6_rika.js?v=20261123i"></script>
-<script src="qdata/g6_eigo.js?v=20261123i"></script>
-<script src="qdata/g6_shakai.js?v=20261123i"></script>
-<script src="qdata/g6_art.js?v=20261123i"></script>
-<script src="qdata/g1_plus.js?v=20261123i"></script>
-<script src="qdata/g2_plus.js?v=20261123i"></script>
-<script src="qdata/g3_plus.js?v=20261123i"></script>
-<script src="qdata/g4_plus.js?v=20261123i"></script>
-<script src="qdata/g5_plus.js?v=20261123i"></script>
-<script src="qdata/g6_plus.js?v=20261123i"></script>
-<script src="textbook.js?v=20261123i"></script>
-<script src="tdata/t1.js?v=20261123i"></script>
-<script src="tdata/t2.js?v=20261123i"></script>
-<script src="tdata/t3.js?v=20261123i"></script>
-<script src="tdata/t4.js?v=20261123i"></script>
-<script src="tdata/t5.js?v=20261123i"></script>
-<script src="tdata/t6.js?v=20261123i"></script>
-<script src="tdata/t1b.js?v=20261123i"></script>
-<script src="tdata/t2b.js?v=20261123i"></script>
-<script src="tdata/t3b.js?v=20261123i"></script>
-<script src="tdata/t4b.js?v=20261123i"></script>
-<script src="tdata/t5b.js?v=20261123i"></script>
-<script src="tdata/t6b.js?v=20261123i"></script>
-<script src="tdata/tc.js?v=20261123i"></script>
-<script src="season.js?v=20261123i"></script>
-<script src="athletic.js?v=20261123i"></script>
-<script src="main.js?v=20261123i"></script>
-<script>console.log('どんぐりむら build 20261123i');</script>
+<script src="qdata/g1_math.js?v=20261126a"></script>
+<script src="qdata/g1_kokugo.js?v=20261126a"></script>
+<script src="qdata/g2_math.js?v=20261126a"></script>
+<script src="qdata/g2_kokugo.js?v=20261126a"></script>
+<script src="qdata/g3_math.js?v=20261126a"></script>
+<script src="qdata/g3_kokugo.js?v=20261126a"></script>
+<script src="qdata/g1_rika.js?v=20261126a"></script>
+<script src="qdata/g1_eigo.js?v=20261126a"></script>
+<script src="qdata/g1_shakai.js?v=20261126a"></script>
+<script src="qdata/g1_art.js?v=20261126a"></script>
+<script src="qdata/g2_rika.js?v=20261126a"></script>
+<script src="qdata/g2_eigo.js?v=20261126a"></script>
+<script src="qdata/g2_shakai.js?v=20261126a"></script>
+<script src="qdata/g2_art.js?v=20261126a"></script>
+<script src="qdata/g3_rika.js?v=20261126a"></script>
+<script src="qdata/g3_eigo.js?v=20261126a"></script>
+<script src="qdata/g3_shakai.js?v=20261126a"></script>
+<script src="qdata/g3_art.js?v=20261126a"></script>
+<script src="qdata/g4_math.js?v=20261126a"></script>
+<script src="qdata/g4_kokugo.js?v=20261126a"></script>
+<script src="qdata/g4_rika.js?v=20261126a"></script>
+<script src="qdata/g4_eigo.js?v=20261126a"></script>
+<script src="qdata/g4_shakai.js?v=20261126a"></script>
+<script src="qdata/g4_art.js?v=20261126a"></script>
+<script src="qdata/g5_math.js?v=20261126a"></script>
+<script src="qdata/g5_kokugo.js?v=20261126a"></script>
+<script src="qdata/g5_rika.js?v=20261126a"></script>
+<script src="qdata/g5_eigo.js?v=20261126a"></script>
+<script src="qdata/g5_shakai.js?v=20261126a"></script>
+<script src="qdata/g5_art.js?v=20261126a"></script>
+<script src="qdata/g6_math.js?v=20261126a"></script>
+<script src="qdata/g6_kokugo.js?v=20261126a"></script>
+<script src="qdata/g6_rika.js?v=20261126a"></script>
+<script src="qdata/g6_eigo.js?v=20261126a"></script>
+<script src="qdata/g6_shakai.js?v=20261126a"></script>
+<script src="qdata/g6_art.js?v=20261126a"></script>
+<script src="qdata/g1_plus.js?v=20261126a"></script>
+<script src="qdata/g2_plus.js?v=20261126a"></script>
+<script src="qdata/g3_plus.js?v=20261126a"></script>
+<script src="qdata/g4_plus.js?v=20261126a"></script>
+<script src="qdata/g5_plus.js?v=20261126a"></script>
+<script src="qdata/g6_plus.js?v=20261126a"></script>
+<script src="textbook.js?v=20261126a"></script>
+<script src="tdata/t1.js?v=20261126a"></script>
+<script src="tdata/t2.js?v=20261126a"></script>
+<script src="tdata/t3.js?v=20261126a"></script>
+<script src="tdata/t4.js?v=20261126a"></script>
+<script src="tdata/t5.js?v=20261126a"></script>
+<script src="tdata/t6.js?v=20261126a"></script>
+<script src="tdata/t1b.js?v=20261126a"></script>
+<script src="tdata/t2b.js?v=20261126a"></script>
+<script src="tdata/t3b.js?v=20261126a"></script>
+<script src="tdata/t4b.js?v=20261126a"></script>
+<script src="tdata/t5b.js?v=20261126a"></script>
+<script src="tdata/t6b.js?v=20261126a"></script>
+<script src="tdata/tc.js?v=20261126a"></script>
+<script src="season.js?v=20261126a"></script>
+<script src="athletic.js?v=20261126a"></script>
+<script src="main.js?v=20261126a"></script>
+<script>console.log('どんぐりむら build 20261126a');</script>
